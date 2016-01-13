@@ -38,8 +38,12 @@ public class LonelyTwitterActivity extends Activity {
 
 			public void onClick(View v) {
 				setResult(RESULT_OK);
-				String text = bodyText.getText().toString();
-				saveInFile(text, new Date(System.currentTimeMillis()));
+				try{
+					NormalTweet tweet = new NormalTweet(((EditText) findViewById(R.id.body)).getText().toString());
+				} catch (TweetTooLongException ex) {
+					//do nothing for now
+				}
+
 				finish();
 
 			}
