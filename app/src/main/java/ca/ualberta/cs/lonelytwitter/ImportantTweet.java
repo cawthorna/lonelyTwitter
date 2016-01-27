@@ -28,4 +28,5 @@ public class ImportantTweet extends Tweet {
     public String getMessage() {
         return "!IMPORTANT! " + this.getMessage();
     }
+
 }
