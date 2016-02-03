@@ -15,6 +15,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,16 +27,97 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * The main activity for a small, personal Twitter app to capture notes, and comments.
+ * <p>It saves the input tweets in json files.</p>
+ * @since 1.2.1
+ * @see LonelyTwitterActivity fore more information.
+ */
 public class LonelyTwitterActivity extends Activity {
 
+	private final String GENERAL_FILE_NAME = "fileName.json";
 	private static final String FILENAME = "file.sav";
+
 	private EditText bodyText;
 	private ListView oldTweetsList;
 
 	private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 	private ArrayAdapter<Tweet> adapter;
+
+
+
+	/**
+	 * Calculates the size of a tweet
+	 * @return number of characters in the tweet
+	 */
+	public int calculateTweetSize() {
+		//
+		return -1;
+	}
+
+	/**
+	 * Removes a string from the body of the tweet
+	 * @param text the text to be removed
+	 * @return the new string.
+	 */
+	private String removeWords(String text) {
+		//
+		return "";
+	}
+
+	/**
+	 * Starts the second activity
+	 * @param intent the intent to be run after pressing the start button.
+	 */
+	private void startSecondActivity(Intent intent) {
+		//
+
+	}
+
+	/**
+	 *
+	 * @param string
+	 * @return
+	 */
+	public String someMethod(String string) {
+		//
+		return "";
+	}
+
+	/**
+	 * Evaluates the second activity
+	 * @param intent
+	 * @return
+	 */
+	public boolean evaluateSecondActivity(Intent intent) {
+		//
+		Intent intent1 = new Intent();
+		startSecondActivity(intent1);
+
+		String expression1 = "", expression2 = "", expression3 = "",
+				expression4 = "";
+
+		String temp = someMethod(expression1 + expression2 + expression3
+				+ expression4);
+		try {
+			int a = 1;
+			int b = 2;
+			if(a < 2) {
+				someMethod("First choice");
+			} else {
+				someMethod("Second choice");
+			}
+			while (true) {
+				int j = 0;
+			}
+		} catch (Exception e) {
+			return true;
+		}
+	}
 	
-	/** Called when the activity is first created. */
+	/**
+	 * Called when the activity is first created.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +160,9 @@ public class LonelyTwitterActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Default android method
+	 */
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -87,6 +172,9 @@ public class LonelyTwitterActivity extends Activity {
 		oldTweetsList.setAdapter(adapter);
 	}
 
+	/**
+	 * Loads the json file to Arraylist
+	 */
 	private void loadFromFile() {
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
@@ -100,7 +188,10 @@ public class LonelyTwitterActivity extends Activity {
 			tweets = new ArrayList<Tweet>();
 		}
 	}
-	
+
+	/**
+	 * saves the arraylist to json file.
+	 */
 	private void saveInFile() {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
