@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutionException;
 
 public class LonelyTwitterActivity extends Activity {
 
+    static final int REQUEST_IMAGE_CAPTURE = 123;
+
     private EditText bodyText;
     private ListView oldTweetsList;
 
@@ -25,6 +27,9 @@ public class LonelyTwitterActivity extends Activity {
     private ArrayAdapter<Tweet> adapter;
 
     private Button saveButton;
+    private ImageButton pictureButton;
+
+    private Bitmap thumbnail;
 
     public ArrayAdapter<Tweet> getAdapter() {
         return adapter;
@@ -52,6 +57,7 @@ public class LonelyTwitterActivity extends Activity {
 
                 tweets.add(latestTweet);
 
+                latestTweet.setThumbnail(thumbnail);
 
                 adapter.notifyDataSetChanged();
 
@@ -59,16 +65,47 @@ public class LonelyTwitterActivity extends Activity {
                 ElasticsearchTweetController.AddTweetTask addTweetTask = new ElasticsearchTweetController.AddTweetTask();
                 addTweetTask.execute(latestTweet);
 
+                bodyText.setText("");
+                pictureButton.setImageResource(android.R.color.transparent);
+
+                tweets.add(0, latestTweet);
+                adapter.notifyDataSetChanged();
+
+                latestTweet = null;
 
                 setResult(RESULT_OK);
             }
         });
+
+        pictureButton = (ImageButton) findViewById(R.id.pictureButton);
+        pictureButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        });
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        loadTweets();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            thumbnail = (Bitmap) extras.get("data");
+            pictureButton.setImageBitmap(thumbnail);
+        }
+    }
+
+    public void loadTweets() {
         // Get the latest tweets from Elasticsearch
         ElasticsearchTweetController.GetTweetsTask getTweetsTask = new ElasticsearchTweetController.GetTweetsTask();
 //        getTweetsTask.execute("test");

@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import com.google.gson.Gson;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
@@ -26,6 +27,14 @@ public abstract class Tweet {
     protected Date date;
     protected String message;
 
+    protected transient Bitmap thumbnail;
+    protected String thumbnailBase64;
+
+    public Tweet(Date date, String message, Bitmap thumbnail) {
+        this.date = date;
+        this.message = message;
+        this.thumbnail = thumbnail;
+    }
 
     public Tweet(Date date, String message) {
         this.date = date;
@@ -56,6 +65,26 @@ public abstract class Tweet {
             throw new TweetTooLongException();
         }
         this.message = message;
+    }
+
+    public Bitmap getThumbnail() {
+        if(thumbnail == null && thumbnailBase64 != null) {
+            byte[] b = Base64.decode(thumbnailBase64, Base64.DEFAULT);
+            thumbnail = BitmapFactory.decodeByteArray(b, 0, b.length);
+        }
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        if(thumbnail != null) {
+            this.thumbnail = thumbnail;
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+            byte[] b = outputStream.toByteArray();
+            thumbnailBase64 = Base64.encodeToString(b, Base64.DEFAULT);
+        }
     }
 
     @Override
